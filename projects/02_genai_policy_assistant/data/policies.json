@@ -1,0 +1,5 @@
+[
+  {"id":"remote_work","question":"What is the remote work policy?","answer":"Employees may work remotely up to 3 days per week."},
+  {"id":"vacation","question":"How much vacation time do employees get?","answer":"Full-time employees accrue 15 days of vacation annually."},
+  {"id":"security","question":"What is the password policy?","answer":"Passwords must be at least 12 characters and rotated every 90 days."}
+]

@@ -1,7 +1,26 @@
-.venv/
+# Python
 __pycache__/
-*.pyc
-models/
-data/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.python-version
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
 .ipynb_checkpoints/
+
+# Envs & tooling
+.venv/
+.env
+.env.*
+
+# OS/editor
 .DS_Store
+.idea/
+.vscode/
+
+# Data/artifacts
+*.log
+*.tmp
+IGN

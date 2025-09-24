@@ -17,6 +17,8 @@ dependencies = [
   "scipy",
   "statsmodels",
   "matplotlib",
+  "prometheus-client>=0.23.1",
+  "chromadb>=1.1.0",
 ]
 
 # keep your existing tool config, e.g.:
