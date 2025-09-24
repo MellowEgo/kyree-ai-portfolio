@@ -1,14 +1,18 @@
-# Proof of Work – Johnson & Johnson (Kyree Sullivan)
+# kyree-ai-portfolio
 
-This repo demonstrates hands-on capability across **AI/ML engineering**, **Generative AI**, and **Discovery Statistics** aligned to three J&J roles.
+![CI](https://github.com/MellowEgo/kyree-ai-portfolio/actions/workflows/ci.yaml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.12%2B-informational)
+![Env](https://img.shields.io/badge/env-managed%20by%20uv-6f42c1)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## Projects
-1. **MLOps Pipeline (Engineer)** – End-to-end training → API → Docker → CI.  
-2. **GenAI Policy Assistant (Data Scientist)** – RAG with citations + eval harness.  
-3. **Discovery Statistics (Senior Scientist)** – DOE, dose–response, ANOVA, CI.
+Real, runnable proof-of-work across **AI/ML Engineering**, **Generative AI**, and **Discovery Statistics** — aligned to my Johnson & Johnson target roles.
 
-## Quickstart
+---
+
+## Quickstart (uv)
+
 ```bash
-make setup
-make test
-```
+uv sync
+uv run pytest
+uv run uvicorn --app-dir "projects/01_ai_ml_engineer_mlopspipeline/api" app:app --reload
+uv run streamlit run projects/02_genai_policy_assistant/src/app_streamlit.py
