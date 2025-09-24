@@ -29,17 +29,17 @@ This project demonstrates an end-to-end ML workflow:
 make train
 make serve  # runs uvicorn
 ```
-Stack
+### Stack
 
-Python 3.12 (managed by uv)
+-Python 3.12 (managed by uv)
 
-scikit-learn, pandas, numpy
+- scikit-learn, pandas, numpy
 
-FastAPI + Uvicorn
+- FastAPI + Uvicorn
 
-PyTest
+- PyTest
 
-GitHub Actions CI
+- GitHub Actions CI
 
 ### Structure
 
@@ -65,3 +65,11 @@ GitHub Actions CI
 ├─ Makefile
 └─ README.md
 ```
+### Notes 
+Notes
+
+- If models/model.joblib isn’t found, the API falls back to a simple demo rule so the endpoint always works.
+
+- To use a different dataset, update src/train.py and re-run uv run python src/train.py.
+
+- Root of the repo has a CI workflow that runs tests and notebook execution (smoke).
