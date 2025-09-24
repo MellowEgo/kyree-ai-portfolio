@@ -41,7 +41,9 @@ PyTest
 
 GitHub Actions CI
 
-Structure: 
+### Structure
+
+```bash
 
 01_ai_ml_engineer_mlopspipeline/
 ├─ api/
@@ -62,3 +64,4 @@ Structure:
 ├─ Dockerfile
 ├─ Makefile
 └─ README.md
+```
