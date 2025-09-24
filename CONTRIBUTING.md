@@ -1,0 +1,1 @@
+Please open an issue, then a PR. Keep notebooks runnable and add tests where possible.

@@ -1,0 +1,13 @@
+pandas
+numpy
+scikit-learn
+fastapi
+uvicorn
+streamlit
+faiss-cpu
+sentence-transformers
+pytest
+pydantic
+scipy
+statsmodels
+matplotlib
