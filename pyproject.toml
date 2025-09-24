@@ -1,0 +1,27 @@
+[project]
+name = "kyree-ai-portfolio"
+version = "0.1.0"
+description = "Proof-of-work repo for J&J roles (AI/ML Engineer, GenAI DS, Discovery Stats)"
+requires-python = ">=3.12"
+dependencies = [
+  "pandas",
+  "numpy",
+  "scikit-learn",
+  "fastapi",
+  "uvicorn",
+  "streamlit",
+  "faiss-cpu",
+  "sentence-transformers",
+  "pytest",
+  "pydantic",
+  "scipy",
+  "statsmodels",
+  "matplotlib",
+]
+
+# keep your existing tool config, e.g.:
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
