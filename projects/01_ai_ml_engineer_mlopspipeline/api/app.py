@@ -23,11 +23,9 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status":"ok", "model_loaded": bool(model)}
+    return {"status":"ok","model_loaded":bool(model)}
 
 @app.post("/predict")
 def predict(payload: Features):
     x = np.array(payload.features, dtype=float).reshape(1, -1)
-    if model is None:
-        return {"prediction": float(0.5 * x.sum())}
-    return {"prediction": float(model.predict(x)[0])}
+    return {"prediction": float(model.predict(x)[0])} if model else {"prediction": float(0.5*x.sum())}
