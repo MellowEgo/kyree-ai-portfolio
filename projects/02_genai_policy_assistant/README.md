@@ -3,6 +3,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://www.python.org/)
 ![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
+![Policy Assistant CI](https://github.com/MellowEgo/kyree-ai-portfolio/actions/workflows/policy.yml/badge.svg)
 
 **Role match:** AI Engineer / Applied LLM Engineer – Enterprise AI
 
