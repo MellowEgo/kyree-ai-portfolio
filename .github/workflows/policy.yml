@@ -35,5 +35,5 @@ jobs:
 
       - name: Run tests
         env:
-          PYTHONPATH: .
-        run: pytest -q projects/02_genai_policy_assistant/tests
+          PYTHONPATH: .:projects/02_genai_policy_assistant/api
+        run: python -m pytest -q projects/02_genai_policy_assistant/tests
