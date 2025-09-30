@@ -1,23 +1,28 @@
 # GenAI Policy Assistant (Engineer Track)
 
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://www.python.org/)
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
+
 **Role match:** AI Engineer / Applied LLM Engineer – Enterprise AI
 
 A minimal, production-style policy Q&A service: FastAPI → JSON policy store → health checks → tests → Makefiles → Docker.
 
-*(Swagger screenshot/GIF optional — drop in `assets/` and link it here.)*
+*(Optional: add a Swagger screenshot/GIF in `assets/` and link it here.)*
 
 ---
 
-## Quickstart (uv)
+## Quickstart
 
 **From repo root**
 ```bash
 uv sync
 uv run uvicorn app:app --app-dir projects/02_genai_policy_assistant/api --reload --port 8001
-# http://127.0.0.1:8001/health | /docs | POST /ask
-```
+# http://127.0.0.1:8001/health | /docs | POST /ask | POST /v1/search
+````
 
 **From project folder**
+
 ```bash
 cd projects/02_genai_policy_assistant
 make setup
@@ -28,58 +33,55 @@ make serve         # reload on :8001
 
 ## Endpoints
 
-| Method | Path       | Purpose                          |
-|------:|------------|----------------------------------|
-|   GET | `/`        | Service info                     |
-|   GET | `/health`  | Health + policy_count            |
-|  POST | `/ask`     | Simple Q&A over local policies   |
+| Method | Path         | Purpose                                 |
+| -----: | ------------ | --------------------------------------- |
+|    GET | `/`          | Service info                            |
+|    GET | `/health`    | Health + policy count                   |
+|   POST | `/ask`       | Simple Q&A over local policies          |
+|   POST | `/v1/ask`    | Versioned Q&A (same as `/ask`)          |
+|   POST | `/v1/search` | Keyword search across policies (with k) |
 
-### Example
+### Examples
 
-**Request**
+**Ask**
+
 ```bash
-curl -s -X POST http://127.0.0.1:8001/ask \
+curl -s -X POST http://127.0.0.1:8001/v1/ask \
   -H "Content-Type: application/json" \
   -d '{"question":"What is the remote work policy?"}'
 ```
 
-**Response**
-```json
-{"answer":"Employees may work remotely up to 3 days per week."}
-```
+**Search**
 
-*(If no match is found, the service returns a safe fallback message.)*
+```bash
+curl -s -X POST http://127.0.0.1:8001/v1/search \
+  -H "Content-Type: application/json" \
+  -d '{"query":"password"}'
+```
 
 ---
 
 ## What’s Inside
 
-* **Service** (`api/app.py`)  
-  FastAPI app using modern **lifespan** startup to load policies from `data/policies.json`.
-* **Data** (`data/policies.json`)  
-  Small demo policy set (HR/IT). Easily swapped for real content or a DB.
-* **Tests** (`tests/`)  
-  Smoke tests using `TestClient` (runs lifespan), plus JSON sanity checks.
-* **Makefiles**  
-  Project-local Makefile for DX; root Makefile targets to run from repo root.
-* **Dockerfile** (`Dockerfile`)  
-  Build a self-contained image and run on port 8000 (mapped to host).
+* **Service** (`api/app.py`) – FastAPI app using **lifespan** startup to load `data/policies.json`.
+* **Data** (`data/policies.json`) – demo policy set (HR/IT).
+* **Tests** (`tests/`) – Smoke tests with `TestClient` + JSON sanity checks.
+* **Makefiles** – Local developer shortcuts; root Makefile proxies.
+* **Dockerfile** – Build & run container on port `8001`.
 
 ### Layout
 
 ```
 02_genai_policy_assistant/
 ├─ api/
-│  ├─ __init__.py
-│  └─ app.py                 # FastAPI service (lifespan loads policies)
+│  └─ app.py                 # FastAPI service
 ├─ data/
 │  └─ policies.json          # toy policy set
 ├─ tests/
 │  ├─ test_api.py            # health + ask
-│  └─ test_policies.py       # JSON loads
-├─ assets/                   # (optional) docs GIFs/screens
+│  └─ test_policies.py       # JSON sanity
 ├─ Dockerfile
-├─ Makefile                  # project-local
+├─ Makefile
 └─ README.md
 ```
 
@@ -88,21 +90,23 @@ curl -s -X POST http://127.0.0.1:8001/ask \
 ## Makefile shortcuts
 
 **From this project folder**
+
 ```bash
 make setup          # uv sync
-make serve          # uvicorn app:app --app-dir api --reload --port 8001
-make serve-prod     # host 0.0.0.0 --port 8001
+make serve          # dev server on :8001
+make serve-prod     # production mode, host 0.0.0.0:8001
 make json-validate  # verify data/policies.json is valid JSON
-make test           # run pytest (uses TestClient with lifespan)
+make test           # run pytest
 make check          # boot, ping /health & /ask, then stop
 make docker-build   # build image "genai-policy"
 make docker-run     # run container on host :8001
 ```
 
-**From repo root** (if you added proxy targets in root Makefile)
+**From repo root**
+
 ```bash
-make serve-policy           # runs FastAPI for this project on PORT2 (default 8001)
-make test-policy            # runs this project's tests
+make serve-policy
+make test-policy
 ```
 
 ---
@@ -110,31 +114,44 @@ make test-policy            # runs this project's tests
 ## Run tests & CI
 
 **Local**
+
 ```bash
-# from project folder
-uv run pytest tests -q
+uv run pytest projects/02_genai_policy_assistant/tests -q
 ```
 
-**GitHub Actions (snippet)** — add to your root workflow before the test step:
+**GitHub Actions (example)** – save as `.github/workflows/policy-assistant.yml`:
+
 ```yaml
-- name: Policy Assistant tests
-  run: |
-    uv run pytest projects/02_genai_policy_assistant/tests -q
+name: Policy Assistant CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v1
+      - name: Install deps
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest projects/02_genai_policy_assistant/tests -q
 ```
 
 ---
 
-## Docker (optional)
+## Docker
 
 **Build & run**
+
 ```bash
-# from project folder
 make docker-build
 make docker-run
-# then visit http://127.0.0.1:8001/docs (container exposes 8000 → host maps 8001)
+# http://127.0.0.1:8001/docs
 ```
 
-If you prefer raw docker:
+Raw docker:
+
 ```bash
 docker build -t genai-policy -f Dockerfile .
 docker run --rm -p 8001:8000 genai-policy
@@ -142,22 +159,10 @@ docker run --rm -p 8001:8000 genai-policy
 
 ---
 
-## Notes & Design Choices
-
-* **Local-first**: pure FastAPI + JSON → easy to clone/run for recruiters.
-* **Modern startup**: FastAPI **lifespan** (no deprecated `@on_event` warnings).
-* **Deterministic tests**: `TestClient` context ensures startup/shutdown runs.
-* **Clear upgrade path**:
-  - Swap JSON search for **embeddings + vector store** (Chroma/FAISS/pgvector).
-  - Add `/version` & Prometheus `/metrics`.
-  - Optional LLM integration & streaming (OpenAI/Vertex/Anthropic), with env-gated keys.
-  - Authn/authz (e.g., API key or OIDC) if you want to deploy publicly.
-
----
-
 ## Sample Data
 
-`data/policies.json` (edit freely):
+`data/policies.json`:
+
 ```json
 [
   {"id":"remote_work","question":"What is the remote work policy?","answer":"Employees may work remotely up to 3 days per week."},
@@ -170,18 +175,6 @@ docker run --rm -p 8001:8000 genai-policy
 
 ## Troubleshooting
 
-* **Import error (`No module named 'api'`)**  
-  Use `--app-dir api` locally (or set `PYTHONPATH=.` for tests).
-* **JSON decode error on startup**  
-  Ensure `data/policies.json` exists and is valid JSON (`make json-validate`).
-* **Port already in use**  
-  Change the port: `make serve PORT=8011` or kill the old PID.
-
----
-
-## Next (nice upgrades)
-
-* Embeddings + semantic search (Chroma with `all-MiniLM-L6-v2`)  
-* `/version` & `/metrics` endpoints  
-* Streamed responses + LLM integration  
-* Record a 5–8s Swagger demo GIF in `assets/` and link it up top
+* **Import error (`No module named 'api'`)** → use `--app-dir api`.
+* **JSON decode error** → validate with `make json-validate`.
+* **Port already in use** → run on another port: `make serve PORT=8012`.
