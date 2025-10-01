@@ -18,8 +18,10 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,7 +34,25 @@ jobs:
         run: |
           python -m pip install -U pip
           pip install -r requirements.txt
-        
+          # Belt & suspenders in case requirements.txt doesn't include it:
+          pip install httpx==0.28.1
+
+      - name: Verify deps
+        run: |
+          python - <<'PY'
+          import importlib.util, sys
+          needed = ["fastapi", "starlette", "httpx", "pytest"]
+          missing = [p for p in needed if importlib.util.find_spec(p) is None]
+          if missing:
+              print("Missing:", missing)
+              sys.exit(1)
+          import fastapi, starlette, httpx, pytest
+          print("fastapi", fastapi.__version__)
+          print("starlette", starlette.__version__)
+          print("httpx", httpx.__version__)
+          print("pytest", pytest.__version__)
+          PY
+
       - name: Run tests
         env:
           PYTHONPATH: .:projects/02_genai_policy_assistant/api
