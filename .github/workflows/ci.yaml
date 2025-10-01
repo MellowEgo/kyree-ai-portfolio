@@ -1,17 +1,43 @@
-name: ci
-on: [push, pull_request]
+name: Project 1 CI
+
+on:
+  push:
+    paths:
+      - "projects/01_ai_ml_engineer_mlopspipeline/**"
+      - ".github/workflows/ci.yaml"
+      - "requirements.txt"
+  pull_request:
+    paths:
+      - "projects/01_ai_ml_engineer_mlopspipeline/**"
+      - ".github/workflows/ci.yaml"
+      - "requirements.txt"
+
 jobs:
-  build-test:
+  test:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - run: pip install -U pip
-      - run: pip install -r requirements.txt
-      - run: pytest -q || true
-      - name: Execute notebooks (smoke)
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
         run: |
-          pip install nbconvert jupyter
-          find . -name "*.ipynb" -maxdepth 3 -print0 | xargs -0 -I {} jupyter nbconvert --to notebook --execute "{}" --output "{}" || true
+          python -m pip install -U pip
+          pip install -r requirements.txt
+
+      # If your tests import modules from the project folder,
+      # the folder name begins with digits, so add it to PYTHONPATH.
+      - name: Run tests
+        env:
+          PYTHONPATH: .:projects/01_ai_ml_engineer_mlopspipeline
+        run: python -m pytest -q projects/01_ai_ml_engineer_mlopspipeline/tests
