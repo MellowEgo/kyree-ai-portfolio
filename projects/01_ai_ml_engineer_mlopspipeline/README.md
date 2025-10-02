@@ -1,5 +1,23 @@
 # MLOps Pipeline (Engineer Track)
 
+**Role match:** Senior AI/ML Engineer – Business Technology
+
+A tiny, production-style ML pipeline: data prep → train → evaluate, with tests, Makefile, and CI. Optional FastAPI app for inference.
+
+![Project 1 CI](https://github.com/MellowEgo/kyree-ai-portfolio/actions/workflows/ci.yaml/badge.svg)
+
+---
+
+## Quickstart
+
+> From **this folder** (`projects/01_ai_ml_engineer_mlopspipeline/`)
+
+```bash
+uv sync
+make test        # run unit tests
+make train       # writes artifacts/metrics.json
+make eval        # reads metrics.json and enforces a small quality gate
+
 ## API Preview
 ![FastAPI /docs](assets/fastapi-docs.png)
 
@@ -42,34 +60,36 @@ make serve  # runs uvicorn
 - GitHub Actions CI
 
 ### Structure
-
 ```bash
 
 01_ai_ml_engineer_mlopspipeline/
 ├─ api/
-│  └─ app.py              # FastAPI service (/health, /predict)
+│  └─ app.py                  # (optional) FastAPI service (/health, /predict)
 ├─ src/
-│  ├─ train.py            # trains & writes models/model.joblib
-│  ├─ features.py         # feature engineering (stub)
-│  ├─ pipeline.py         # orchestration (stub)
-│  └─ predict.py          # local predict helpers (stub)
+│  ├─ train.py                # writes artifacts/metrics.json
+│  └─ eval.py                 # reads metrics.json and checks thresholds
 ├─ tests/
 │  ├─ test_api.py
 │  ├─ test_features.py
-│  └─ test_train.py
-├─ notebooks/
-│  └─ 00_exploration.ipynb
+│  ├─ test_train.py
+│  ├─ test_smoke.py
+│  └─ test_metrics.py
 ├─ assets/
-│  └─ fastapi-docs.png    # screenshot of /docs
-├─ Dockerfile
+│  └─ fastapi-docs.png        # screenshot of /docs (optional)
+├─ artifacts/                 # generated outputs (gitignored)
 ├─ Makefile
 └─ README.md
 ```
+### Make Targets
+```bash
+make setup    # uv sync
+make test     # run pytest (from this folder)
+make train    # generate artifacts/metrics.json
+make eval     # read artifacts/metrics.json and assert threshold
+make lint     # ruff lint/format check (if installed)
+make clean    # remove artifacts and caches
+```
 ### Notes 
-Notes
-
-- If models/model.joblib isn’t found, the API falls back to a simple demo rule so the endpoint always works.
-
-- To use a different dataset, update src/train.py and re-run uv run python src/train.py.
-
-- Root of the repo has a CI workflow that runs tests and notebook execution (smoke).
+- If artifacts/metrics.json doesn’t exist, run make train first.
+-The API is optional—omit it if you’re showcasing pipeline work only.
+-You can override defaults without editing the Makefile:
