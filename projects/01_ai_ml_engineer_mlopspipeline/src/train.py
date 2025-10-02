@@ -1,16 +1,30 @@
-# stub training script
-import pandas as pd
-from sklearn.linear_model import LinearRegression
-import joblib, os
+#!/usr/bin/env python
+import argparse, json, os, time, random
 
 def main():
-    # synthetic data
-    X = pd.DataFrame({'a':[1,2,3,4], 'b':[0,1,0,1]})
-    y = X['a'] * 0.5 + X['b'] * 0.2
-    model = LinearRegression().fit(X, y)
-    os.makedirs("projects/01_ai_ml_engineer_mlopspipeline/models", exist_ok=True)
-    joblib.dump(model, "projects/01_ai_ml_engineer_mlopspipeline/models/model.joblib")
-    print("Model trained and saved.")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--epochs", type=int, default=1)
+    ap.add_argument("--sample", type=int, default=500)
+    ap.add_argument("--out", type=str, default="artifacts")
+    args = ap.parse_args()
+
+    os.makedirs(args.out, exist_ok=True)
+
+    # Fake a quick "train"
+    time.sleep(0.2)
+    metrics = {
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "params": {"epochs": args.epochs, "sample": args.sample},
+        "metrics": {
+            "accuracy": round(0.7 + random.random() * 0.3, 4),
+            "loss": round(0.5 * random.random(), 4)
+        }
+    }
+
+    out_fp = os.path.join(args.out, "metrics.json")
+    with open(out_fp, "w") as f:
+        json.dump(metrics, f, indent=2)
+    print(f"Wrote {out_fp}")
 
 if __name__ == "__main__":
     main()
