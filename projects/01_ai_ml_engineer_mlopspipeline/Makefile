@@ -22,7 +22,7 @@ help:
 	@echo "  test    : run unit tests (pytest)"
 	@echo "  train   : quick training run writing to $(ARTIFACTS)"
 	@echo "  eval    : load and check $(ARTIFACTS)/metrics.json"
-	@echo "  lint    : ruff lint + format check (if ruff installed)"
+	@echo "  lint    : ruff lint + format check"
 	@echo "  clean   : remove caches and artifacts"
 	@echo ""
 
@@ -30,6 +30,7 @@ setup:
 	uv sync
 
 test:
+	# run from THIS folder; 'tests' is local
 	PYTHONPATH=. uv run pytest -q tests
 
 train:
@@ -40,14 +41,7 @@ eval:
 	$(PY) src/eval.py --in $(ARTIFACTS)/metrics.json
 
 lint:
-	# Install ruff if missing; ignore error if already present
-	uv run python - <<'PY' || true
-import importlib, subprocess
-try:
-    importlib.import_module("ruff")
-except ImportError:
-    subprocess.check_call(["uv", "pip", "install", "ruff"])
-PY
+	uv pip install -q ruff || true
 	uv run ruff check .
 	uv run ruff format --check .
 
