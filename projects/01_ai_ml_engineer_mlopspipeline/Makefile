@@ -38,10 +38,10 @@ test:
 
 train:
 	mkdir -p $(ARTIFACTS)
-	$(PY) src/train.py --epochs $(EPOCHS) --sample $(SAMPLE) --out $(ARTIFACTS)
+	$(PY) src/train.py --out $(ARTIFACTS)
 
 eval:
-	$(PY) src/eval.py --in $(ARTIFACTS)/metrics.json
+	$(PY) src/eval.py --in $(ARTIFACTS)/model.joblib --out $(ARTIFACTS)/metrics.json
 
 # NEW: one-command pipeline gate (used in README and CI)
 check: train eval

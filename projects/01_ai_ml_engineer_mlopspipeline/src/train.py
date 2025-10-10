@@ -1,30 +1,25 @@
-#!/usr/bin/env python
-import argparse, json, os, time, random
+# src/train.py
+import pandas as pd
+import joblib
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+import argparse
+import os
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--epochs", type=int, default=1)
-    ap.add_argument("--sample", type=int, default=500)
-    ap.add_argument("--out", type=str, default="artifacts")
-    args = ap.parse_args()
+parser = argparse.ArgumentParser()
+parser.add_argument('--out', default='artifacts', help='Output directory')
+args = parser.parse_args()
 
-    os.makedirs(args.out, exist_ok=True)
+df = pd.read_csv('models/demo_dataset.csv')
 
-    # Fake a quick "train"
-    time.sleep(0.2)
-    metrics = {
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "params": {"epochs": args.epochs, "sample": args.sample},
-        "metrics": {
-            "accuracy": round(0.7 + random.random() * 0.3, 4),
-            "loss": round(0.5 * random.random(), 4)
-        }
-    }
+X = df.drop('treatment_successful', axis=1)
+y = df['treatment_successful']
+X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    out_fp = os.path.join(args.out, "metrics.json")
-    with open(out_fp, "w") as f:
-        json.dump(metrics, f, indent=2)
-    print(f"Wrote {out_fp}")
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
 
-if __name__ == "__main__":
-    main()
+os.makedirs(args.out, exist_ok=True)
+joblib.dump(model, f'{args.out}/model.joblib')
+
+print(f"✅ Model trained and saved to {args.out}/model.joblib")
