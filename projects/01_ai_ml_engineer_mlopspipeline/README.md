@@ -26,16 +26,6 @@
 
 ## 🧩 System Diagram
 
-```mermaid
-flowchart LR
-    A[Data (Iris)] -->|input| B[Train (scikit-learn)]
-    B -->|outputs| C[metrics.json + run_id.txt]
-    C -->|validate| D[Eval: Threshold Check]
-    D -->|pass| E[Serve (FastAPI)]
-    D -->|fail| F[[Pipeline Fails (Exit 1)]]
-    E -->|publish| G[/health + /metrics/]
-    G -->|monitor| H[CI Dashboard]
-```
 
 
 ![Project 1 CI](https://github.com/MellowEgo/kyree-ai-portfolio/actions/workflows/ci.yaml/badge.svg)
