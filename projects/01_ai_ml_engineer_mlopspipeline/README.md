@@ -28,13 +28,14 @@
 
 ```mermaid
 flowchart LR
-    A[Data (Iris)] --> B[Train (scikit-learn)]
-    B --> C[metrics.json + run_id.txt]
-    C --> D[Eval: Threshold Check]
+    A[Data (Iris)] -->|input| B[Train (scikit-learn)]
+    B -->|outputs| C[metrics.json + run_id.txt]
+    C -->|validate| D[Eval: Threshold Check]
     D -->|pass| E[Serve (FastAPI)]
     D -->|fail| F[[Pipeline Fails with Exit 1]]
     E --> G[/health + /metrics]
-    G --> H[Monitoring / CI]
+    G -->|monitor| H[CI Dashboard]
+```
 
 
 ![Project 1 CI](https://github.com/MellowEgo/kyree-ai-portfolio/actions/workflows/ci.yaml/badge.svg)
