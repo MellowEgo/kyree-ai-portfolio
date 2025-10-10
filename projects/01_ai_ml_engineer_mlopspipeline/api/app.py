@@ -1,6 +1,6 @@
 # api/app.py
 from fastapi import FastAPI
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, FileResponse
 from pydantic import BaseModel
 import numpy as np, os, joblib, json, time
 
@@ -71,3 +71,12 @@ def predict(payload: Features):
         # fallback simple heuristic if no model file is found
         y_pred = 0.5 * x.sum()
     return {"prediction": float(y_pred)}
+
+
+# --- New: serve favicon to avoid 404 in browser ---
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    icon_path = os.path.join(ROOT_DIR, "..", "assets", "favicon.ico")
+    if os.path.exists(icon_path):
+        return FileResponse(icon_path)
+    return {"detail": "No favicon found"}

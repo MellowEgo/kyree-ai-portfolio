@@ -1,16 +1,19 @@
-# AI/ML Engineer — MLOps Pipeline (Project 01)
+## 🧠 Project 01 — AI/ML Engineer MLOps Pipeline
 
-![Project 1 CI](https://github.com/MellowEgo/kyree-ai-portfolio/actions/workflows/ci.yaml/badge.svg)
+> **Goal:** Demonstrate an end-to-end AI engineering workflow — from data simulation to training, evaluation, and serving via FastAPI.
 
-> **One-line repo description:**  
-> A production-style, config-driven ML pipeline that trains → validates with thresholds → serves via FastAPI with health/metrics — designed to mirror regulated enterprise workflows (e.g., Johnson & Johnson).
+**Tech Stack:** Python • FastAPI • Make • Uvicorn • NumPy • Pydantic  
+**Key Features:**
+- 🧩 CI-safe `make check` pipeline for training + evaluation  
+- 📈 `/metrics` endpoint returns model accuracy/loss in JSON  
+- ⚙️ `/health` endpoint confirms live model + uptime  
+- 🧠 `/predict` accepts feature arrays and returns mock predictions  
+- 🧾 Includes [MODEL_CARD.md](projects/01_ai_ml_engineer_mlopspipeline/MODEL_CARD.md) for governance
 
----
+**Live Docs Preview:**  
+![Swagger UI Screenshot](projects/01_ai_ml_engineer_mlopspipeline/assets/fastapi-docs.png)
 
-## 🎯 Purpose
-
-This project demonstrates a **production-grade ML pipeline** with disciplined engineering over flashy modeling.  
-It highlights **reproducibility, traceability, and audit-friendly validation** — the same habits expected in regulated environments like **Johnson & Johnson**.
+> ✅ *Validated end-to-end on local build using `uv` and Makefile orchestration.*
 
 **What reviewers see in 60 seconds**
 - `make check` runs a deterministic **train → eval** loop and **fails** if metrics regress  
@@ -35,7 +38,7 @@ flowchart LR
 
 
 ![Project 1 CI](https://github.com/MellowEgo/kyree-ai-portfolio/actions/workflows/ci.yaml/badge.svg)
-
+![Swagger UI Screenshot](projects/01_ai_ml_engineer_mlopspipeline/assets/fastapi-docs.png)
 ---
 
 ### Quickstart
@@ -181,5 +184,3 @@ run_id.txt
 
 ---
 
-Would you like me to follow this by generating the **assets/pipeline.mmd** and **configs/local.yaml** next, so everything renders and runs right away?
-```
