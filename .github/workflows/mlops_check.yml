@@ -1,0 +1,31 @@
+name: MLOps Pipeline Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Run pipeline check
+        run: make -C projects/01_ai_ml_engineer_mlopspipeline check
+
+      - name: Run tests
+        run: make -C projects/01_ai_ml_engineer_mlopspipeline test
