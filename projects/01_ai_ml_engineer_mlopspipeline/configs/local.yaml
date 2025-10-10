@@ -1,0 +1,9 @@
+random_seed: 42
+
+eval:
+  thresholds:
+    accuracy: 0.85
+    f1_macro: 0.85
+
+service:
+  port: 8010
