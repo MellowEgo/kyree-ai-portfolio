@@ -28,7 +28,7 @@
 
 ```mermaid
 flowchart LR
-    A[Data (Iris)] -->|input| B[Train (scikit-learn)]
+    A -->[Data (Iris)] -->|input| B[Train (scikit-learn)]
     B -->|outputs| C[metrics.json + run_id.txt]
     C -->|validate| D[Eval: Threshold Check]
     D -->|pass| E[Serve (FastAPI)]
