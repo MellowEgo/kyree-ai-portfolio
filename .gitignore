@@ -1,7 +1,7 @@
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
+*.pyc
 *.pyd
 *.so
 .python-version
@@ -9,19 +9,20 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .ipynb_checkpoints/
+*.joblib
 
-# Envs & tooling
+# Envs & Tooling
 .venv/
 .env
 .env.*
 
-# OS/editor
+# OS / Editor
 .DS_Store
 .idea/
 .vscode/
 
-# Data/artifacts
+# Data / Artifacts
 *.log
 *.tmp
-IGN
-**/artifacts/
+*.csv
+artifacts/
