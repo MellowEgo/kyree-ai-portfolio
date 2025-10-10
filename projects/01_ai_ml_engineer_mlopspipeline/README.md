@@ -27,7 +27,6 @@
 ## 🧩 System Diagram
 
 ```mermaid
-
 flowchart LR
     A -->[Data (Iris)] -->|input| B[Train (scikit-learn)]
     B -->|outputs| C[metrics.json + run_id.txt]
@@ -36,7 +35,6 @@ flowchart LR
     D -->|fail| F[[Pipeline Fails with Exit 1]]
     E --> G[/health + /metrics]
     G -->|monitor| H[CI Dashboard]
-
 ```
 
 
