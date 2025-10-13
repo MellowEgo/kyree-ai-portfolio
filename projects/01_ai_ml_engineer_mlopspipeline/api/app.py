@@ -8,7 +8,7 @@ app = FastAPI(title="MLOps Pipeline Demo", version="1.0")
 
 # --- Model + artifacts paths ---
 ROOT_DIR = os.path.dirname(__file__)
-MODEL_PATH = os.path.join(ROOT_DIR, "..", "models", "model.joblib")
+MODEL_PATH = os.path.join(ROOT_DIR, "..", "artifacts", "model.joblib")
 METRICS_PATH = os.path.join(ROOT_DIR, "..", "artifacts", "metrics.json")
 
 model = None
@@ -56,7 +56,7 @@ def metrics():
         return PlainTextResponse("# No metrics available yet", status_code=404)
     with open(METRICS_PATH, "r") as f:
         data = json.load(f)
-    acc = data["metrics"].get("accuracy", 0)
+    acc = data.get("accuracy", 0)
     loss = data["metrics"].get("loss", 0)
     return PlainTextResponse(f"accuracy {acc}\nloss {loss}\n", media_type="text/plain")
 
